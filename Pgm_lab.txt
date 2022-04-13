@@ -1,0 +1,229 @@
+
+
+
+Write a program to display no. of times visiting in web page using servlet
+Write a Program in servlet to execute session management.
+Construct two JSPs to create and handle session variables.(In JSP1 you use session object’s method setAttribute and in JSP2 you use getAttribute) and create a servlet chaining using RequestDispatcher.
+Write a Servlet program to show CRUD operation for Student database.
+
+
+Write a Servlet program to conduct an online quiz application for the given web page. 
+
+import java.io.*;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+public class StudentServlet3 extends HttpServlet
+{
+String message,Seat_no,Name,ans1,ans2,ans3,ans4,ans5;
+int Total=0;
+Connection connect;
+Statement stmt=null;
+ResultSet rs=null;
+public void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException
+
+{
+try
+{
+Class.forName("com.mysql.jdbc.Driver");  
+		  
+connect=DriverManager.getConnection("jdbc:mysql://localhost:3306/adjp","root","root");  
+
+connect=DriverManager.getConnection(url," "," ");
+message="Thank you for participating in online Exam";
+}
+catch(ClassNotFoundException cnfex){
+cnfex.printStackTrace();
+}
+catch(SQLException sqlex){
+sqlex.printStackTrace();
+}
+catch(Exception excp){
+excp.printStackTrace();
+}
+Seat_no=request.getParameter("Seat_no");
+Name=request.getParameter("Name");
+ans1=request.getParameter("group1");
+ans2=request.getParameter("group2");
+ans3=request.getParameter("group3");
+ans4=request.getParameter("group4");
+ans5=request.getParameter("group5");
+if(ans1.equals("True"))
+Total+=2;
+if(ans2.equals("False"))
+Total+=2;
+if(ans3.equals("True"))
+Total+=2;
+if(ans4.equals("False"))
+Total+=2;
+if(ans5.equals("False"))
+Total+=2;
+try
+{
+Statement stmt=connect.createStatement();
+String query="INSERT INTO student("+"Seat_no,Name,Total"+") VALUES('"+Seat_no+"','"+Name+"','"+Total+"')";
+
+int result=stmt.executeUpdate(query);
+stmt.close();
+}catch(SQLException ex){
+}
+response.setContentType("text/html");
+PrintWriter out=response.getWriter();
+out.println("<html>");
+out.println("<head>");
+out.println("</head>");
+out.println("<body bgcolor=cyan>");
+out.println("<center>");
+out.println("<h1>"+message+"</h1>\n");
+out.println("<h3>Yours results stored in our database</h3>");
+out.print("<br><br>");
+out.println("<b>"+"Participants and their Marks"+"</b>");
+out.println("<table border=5>");
+try
+{
+Statement stmt=connect.createStatement();
+String query="SELECT * FROM student";
+rs=stmt.executeQuery(query);
+out.println("<th>"+"Seat_no"+"</th>");
+out.println("<th>"+"Name"+"</th>");
+out.println("<th>"+"Marks"+"</th>");
+while(rs.next())
+{
+out.println("<tr>");
+out.print("<td>"+rs.getInt(1)+"</td>");
+out.print("<td>"+rs.getString(2)+"</td>");
+out.print("<td>"+rs.getString(3)+"</td>");
+out.println("</tr>");
+}
+out.println("</table>");
+}
+catch(SQLException ex){ }
+finally
+{
+try
+{
+if(rs!=null)
+rs.close();
+if(stmt!=null)
+stmt.close();
+if(connect!=null) 
+connect.close();
+}
+catch(SQLException e){ }
+}
+out.println("</center>");
+out.println("</body></html>");
+Total=0;
+} }
+
+
+
+
+HTML CODE:
+<html>
+<head><title>Database Test</title></head>
+<body>
+<center>
+<h1>Online Examination</h1>
+</center>
+<form action="StudentServlet3" method="POST">
+<div align="left"><br></div>
+<b>Seat Number:</b> <input type="text" name="Seat_no">
+<div align="Right">
+<b>Name:</b> <input type="text" name="Name" size="50"><br>
+</div>
+<br><br>
+<b>1. Every host implements transport layer.</b><br/>
+<input type="radio" name="group1" value="True">True
+<input type="radio" name="group1" value="False">False<br>
+<b>2. It is a network layer's responsibility to forward packets reliably from source to destination</b><br/>
+
+<input type="radio" name="group2" value="True">True
+<input type="radio" name="group2" value="False">False<br>
+<b>3. Packet switching is more useful in bursty traffic</b><br/>
+<input type="radio" name="group3" value="True">True
+<input type="radio" name="group3" value="False">False<br>
+<b>4. A phone network uses packet switching</b><br/>
+<input type="radio" name="group4" value="True">True
+<input type="radio" name="group4" value="False">False<br>
+<b>5. HTML is a Protocol for describing web contents</b><br/>
+<input type="radio" name="group5" value="True">True
+<input type="radio" name="group5" value="False">False<br>
+<br><br><br>
+<center>
+<input type="submit" value="Submit"><br><br>
+</center>
+</form>
+</body>
+</html>
+
+
+
+A)	Construct a JSP program to Display “This is Your First JSP Program” and date and time.
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1" import="java.util.*"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Welcome to Alliance University <br/>
+This is my First JSP Program <br/>
+Displaying Date & Time using Calendar class: <%=java.util.Calendar.getInstance().getTime() %><br/>
+
+Displaying Date & Time using Date class:<%=new Date() %></h1>
+</body>
+</html>
+
+
+A)	Write a JSP program to forward and include files using standard action tags
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1> Welcome to the Program to display Date functions</h1>
+<jsp:forward page="printdate.jsp" >  
+<jsp:param name="name" value="Alliance" />  
+</jsp:forward>  
+<br/>
+<h2> After Forward and starting include</h2>
+<jsp:include page="printdate.jsp" />  
+  
+<h2>end section of index page</h2>  
+  
+</body>  
+
+</body>
+</html>
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>  
+  <h2>In Ind2.jsp file</h2>
+<% out.print("Today is:   "+java.util.Calendar.getInstance().getTime()); %>  
+<br/> Parameter Set  value:   <%= request.getParameter("name") %>  
+  <h2>this is index page</h2>  
+
+</html>
+
+
+
+B) Write a JSP application to execute a given form using html and store it in database.
+Write a JSP to show CRUD(create, read, update and delete) operations (MySQL).
+A) Create a WebApp for online Shopping Cart using JSPs and Java Beans (No Database).
+B) Create a WebApp for online Shopping Cart using JSPs and Java Beans and Database.
+Write a program to show the CRUD operations using Hibernate.
+
